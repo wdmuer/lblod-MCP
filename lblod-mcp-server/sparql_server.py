@@ -15,33 +15,33 @@ from mcp.server.fastmcp import FastMCP
 class SPARQLServer:
     """Wrapper for executing SPARQL queries on a given endpoint."""
 
-    def __init__(self, endpoint_url: str):
+    def __init__(self, endpointUrl: str):
         """
         Initializes the SPARQL server.
 
         Args:
-            endpoint_url (str): The URL of the SPARQL endpoint.
+            endpointUrl (str): The URL of the SPARQL endpoint.
         """
-        self.endpoint_url = endpoint_url
-        self.sparql = SPARQLWrapper(endpoint_url)
+        self.endpointUrl = endpointUrl
+        self.sparql = SPARQLWrapper(endpointUrl)
         self.sparql.setReturnFormat(JSON)
 
-    def query(self, query_string: str) -> Dict[str, Any]:
+    def query(self, queryString: str) -> Dict[str, Any]:
         """
         Executes a SPARQL query.
 
         Args:
-            query_string (str): The SPARQL query to execute.
+            queryString (str): The SPARQL query to execute.
 
         Returns:
             Dict[str, Any]: The query results in JSON format or an error message.
         """
         try:
-            self.sparql.setQuery(query_string)
+            self.sparql.setQuery(queryString)
             results = self.sparql.query().convert()
             return results
         except SPARQLExceptions.EndPointNotFound:
-            return {"error": f"SPARQL endpoint not found: {self.endpoint_url}"}
+            return {"error": f"SPARQL endpoint not found: {self.endpointUrl}"}
         except Exception as e:
             return {"error": f"Query error: {str(e)}"}
 
@@ -49,15 +49,15 @@ class SPARQLServer:
 class MunicipalityQuerier:
     """Utility class for querying municipality information from Flanders' LBLOD SPARQL endpoint."""
 
-    def __init__(self, sparql_server: SPARQLServer):
+    def __init__(self, sparqlServer: SPARQLServer):
         """
         Initializes the MunicipalityQuerier helper.
 
         Args:
-            sparql_server (SPARQLServer): An initialized SPARQLServer instance
+            sparqlServer (SPARQLServer): An initialized SPARQLServer instance
                 on the LBLOD SPARQL endpoint.
         """
-        self.sparql_server = sparql_server
+        self.sparqlServer = sparqlServer
 
     def getMunicipalityUri(self, name: str) -> Optional[str]:
         """
@@ -83,7 +83,7 @@ class MunicipalityQuerier:
         }}
         LIMIT 1
         """
-        results = self.sparql_server.query(query)
+        results = self.sparqlServer.query(query)
         try:
             bindings = results["results"]["bindings"]
             if bindings:
@@ -94,8 +94,8 @@ class MunicipalityQuerier:
 
 
 # Initialize the SPARQL server and helper
-sparql_server = SPARQLServer("https://data.lblod.info/sparql")
-query_helper = MunicipalityQuerier(sparql_server)
+sparqlServer = SPARQLServer("https://data.lblod.info/sparql")
+queryHelper = MunicipalityQuerier(sparqlServer)
 
 # Start the FastMCP server
 mcp = FastMCP("Municipality URI Query Tool")
@@ -120,7 +120,7 @@ def getMunicipalityUri(name: str) -> Union[str, Dict[str, str]]:
     Returns:
         Union[str, Dict[str, str]]: Municipality URI or error.
     """
-    uri = query_helper.getMunicipalityUri(name)
+    uri = queryHelper.getMunicipalityUri(name)
     if not uri:
         return {"error": f"No municipality URI found for name: {name}"}
     return uri
