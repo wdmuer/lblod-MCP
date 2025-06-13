@@ -22,7 +22,7 @@ Open two terminals, and run one of the following two commands in each terminal.
 
 Terminal 1:
 ```
-uv --directory [/ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/](/lblod-mcp-server) run sparql_server.py
+uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/ run sparql_server.py
 ```
 Terminal 2:
 ```
