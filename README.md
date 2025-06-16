@@ -22,11 +22,11 @@ Open two terminals, and run one of the following two commands in each terminal.
 
 Terminal 1:
 ```
-uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/ run sparql_server.py
+uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/ run server.py
 ```
 Terminal 2:
 ```
-uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-client/FOLDER/ run client.py /ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/sparql_server.py
+uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-client/FOLDER/ run client.py /ABSOLUTE/PATH/TO/lblod-mcp-server/FOLDER/server.py
 ```
 In terminal 2, the chat application will then start, allowing you to query the Centrale Vindplaats SPARQL endpoint with the implemented functionalities.
 
