@@ -30,3 +30,5 @@ uv --directory /ABSOLUTE/PATH/TO/lblod-mcp-client/FOLDER/ run client.py /ABSOLUT
 ```
 In terminal 2, the chat application will then start, allowing you to query the Centrale Vindplaats SPARQL endpoint with the implemented functionalities.
 
+## Query examples
+See [lblod-mcp-server/README.md](/lblod-mcp-server/README.md) for query examples of the supported functionalities.
