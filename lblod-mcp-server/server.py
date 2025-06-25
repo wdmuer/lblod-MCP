@@ -8,7 +8,7 @@ Link to his repo: https://github.com/ekzhu/mcp-server-sparql/tree/main.
 Author: @wdmuer
 """
 
-from typing import Dict, Union
+from typing import Dict, Union, List
 from mcp.server.fastmcp import FastMCP
 from sparql_server import SPARQLServer
 from fcv_querier import FCVQuerier
@@ -44,6 +44,55 @@ def getMunicipalityUri(name: str) -> Union[str, Dict[str, str]]:
     if not uri:
         return {"error": f"No municipality URI found for name: {name}"}
     return uri
+
+
+@mcp.tool(description="""
+Get 'number' newest/oldest decision URIs made in a municipality based on its name.
+
+Args:
+    name: The name of the municipality (e.g., 'Gent', 'Aalst', 'Lanaken').
+    number (int): Maximum number of decisions to return. Set to -1 to return all.
+    order (str): Either "DESC" (newest first) or "ASC" (oldest first) to specify the sort order.
+
+Returns:
+    A list of decision URIs.
+          
+Note:
+    This tool returns only actual URIs retrieved from a trusted data source.
+    If no decisions are found, the returned list will be empty.
+    The tool does not infer, summarize, or describe the content of any decisions.
+""")
+def getDecisionURIs(name: str, number: int, order: str) -> List[str]:
+    """
+    FastMCP tool: Get decision URIs from a municipality.
+
+    Args:
+        name (str): Municipality name.
+        number (int): Maximum number of decisions to return. Set to -1 to return all.
+        order (str): Either "DESC" (newest first) or "ASC" (oldest first) to specify the sort order.
+
+    Returns:
+        List[str]: List of decision URIs, can be empty in case no decisions were found.
+    """
+    operatingAreaURI = queryHelper.getMunicipalOperatingAreaURI(name)
+
+    governingUnits = queryHelper.getGoverningUnitURIsForOperatingArea(
+        operatingAreaURI)
+
+    governingBodies = queryHelper.getGoverningBodyURIsForGoverningUnits(
+        governingUnits)
+
+    timeSpecializations = queryHelper.getTimeSpecializationsForGoverningBodies(
+        governingBodies)
+
+    decisions = queryHelper.getDecisionURIsFromTimeSpecializations(
+        timeSpecializations, number, order)
+
+    if decisions == []:
+        decisions = [
+            f"No URIs found! Reply with this exact message: No decision URIs for {name} could be found"]
+
+    return decisions
 
 
 if __name__ == "__main__":

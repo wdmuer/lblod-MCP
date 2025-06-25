@@ -8,7 +8,7 @@ Author: @wdmuer
 """
 
 from typing import Dict, Any
-from SPARQLWrapper import SPARQLWrapper, JSON, SPARQLExceptions
+from SPARQLWrapper import SPARQLWrapper, JSON, SPARQLExceptions, POST
 
 
 class SPARQLServer:
@@ -37,6 +37,7 @@ class SPARQLServer:
         """
         try:
             self.sparql.setQuery(queryString)
+            self.sparql.setMethod(POST)
             results = self.sparql.query().convert()
             return results
         except SPARQLExceptions.EndPointNotFound:
